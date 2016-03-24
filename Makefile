@@ -6,37 +6,39 @@
 #    By: kwiessle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/03/24 13:54:00 by kwiessle          #+#    #+#              #
-#    Updated: 2016/03/24 14:14:26 by kwiessle         ###   ########.fr        #
+#    Updated: 2016/03/24 16:57:31 by kwiessle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
 
-SRC =
+SRCS = srcs/testfdf.c srcs/ft_wire.c
 
 OBJS = $(SRCS:.c=.o)
-INCLUDES =-I libft -I includes
-LIBS = -L libft/ -lft
+INCLUDES =-I libft -I includes -I mlx
+LIBS = -L libft/ -lft -L mlx/ -lmlx
 FLAGS = -Wall -Werror -Wextra
+FRAMEWORKS = -framework Appkit -framework OpenGL
 
 $(NAME):	$(OBJS)
 	@make -C libft/ re
-	@gcc -o $(NAME) $(OBJS)
+	@make -C mlx/ re
+	@gcc -o $(NAME) $(OBJS) $(LIBS) $(FRAMEWORKS)
 	@echo "Compilation Succeed"
 
 $(OBJ): %.o: %.c
-	@gcc $(NAME) $(OBJS) $(LIBS) -c $< -o $@
+	@gcc $(FLAGS) $(INCLUDES) -c $< -o $@
 
 all:		$(NAME)
 
 clean:
 	rm -f	$(OBJS)
 
-fclean:
+fclean:	clean
 	rm -f	$(NAME)
 	@make -C libft/ fclean
+	@make -C mlx/ clean
 
-re:
-	fclean all
+re:	fclean all
 
 .PHONY: all clean fclean re
