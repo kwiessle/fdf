@@ -6,13 +6,13 @@
 #    By: kwiessle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/03/24 13:54:00 by kwiessle          #+#    #+#              #
-#    Updated: 2016/03/24 16:57:31 by kwiessle         ###   ########.fr        #
+#*   Updated: 2016/03/29 17:02:03 by kwiessle         ###   ########.fr       *#
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
 
-SRCS = srcs/testfdf.c srcs/ft_wire.c
+SRCS = srcs/main.c srcs/affine.c srcs/read_file.c
 
 OBJS = $(SRCS:.c=.o)
 INCLUDES =-I libft -I includes -I mlx
