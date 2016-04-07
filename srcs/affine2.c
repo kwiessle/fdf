@@ -6,44 +6,45 @@
 /*   By: kwiessle <kwiessle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/29 13:16:07 by kwiessle          #+#    #+#             */
-/*   Updated: 2016/04/07 14:14:51 by kwiessle         ###   ########.fr       */
+/*   Updated: 2016/03/29 16:12:39 by kwiessle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mlx.h>
 #include "../includes/fdf.h"
 
-void	affine(void *mlx, void *window, t_dot *start, t_dot *end)
+void	affine(void *mlx, void *window, int x_s, int y_s, int x_e, int y_e)
 {
-	t_dot		cons;
-	t_dot		cons2;
+	double		a;
+	double		b;
+	double		x;
+	double		y;
 	double		y2;
 
-	if (start->x < start->y)
-		return (affine(mlx, window, *end, *start));
-	cons2.x = start->x - start->y;
-	if (cons2.x == 0)
+	if (x_e < x_s)
+		return (affine(mlx, window, x_e, y_e, x_s, y_s));
+	x = x_e - x_s;
+	if (x == 0)
 	{
-		if (end->y < start->y)
-			ft_swap(&end->y, &start->y);
-		while (start->y <= end->y)
+		if (y_e < y_s)
+			return (affine(mlx, window, x_s, y_e, x_e, y_s));
+		while (y_s <= y_e)
 		{
-			mlx_pixel_put(mlx, window, start->x, start->y, 0x800202);
-			start->y++;
-			printf("%f\n", start->y);
+			mlx_pixel_put(mlx, window, x_s, y_s, 0x800202);
+			y_s++;
 		}
 	}
-	cons2.y = end->y - start->y;
-	cons.x = cons2.y / cons2.x;
-	cons.y = (start->y) - (cons.x * start->x);
-	while (start->x < end->x)
+	y = y_e - y_s;
+	a = y / x;
+	b = y_s - (a * x_s);
+	while (x_s < x_e)
 	{
-		y2 = (cons.x * start->x + cons.y);
-		while (y2 > (cons.x * (start->x + 1) + cons.y))
+		y2 = (a * x_s +b);
+		while (y2 > (a * (x_s + 1) + b))
 		{
-			mlx_pixel_put(mlx, window, start->x, y2, 0xFFF0FF);
+			mlx_pixel_put(mlx, window, x_s, y2, 0xFFF0FF);
 			y2--;
 		}
-		start->x++;
+		x_s++;
 	}
 }

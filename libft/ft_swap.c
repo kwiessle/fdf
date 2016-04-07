@@ -1,25 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   testfdf.c                                          :+:      :+:    :+:   */
+/*   ft_swap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vquesnel <vquesnel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kwiessle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/03/19 19:43:36 by vquesnel          #+#    #+#             */
-/*   Updated: 2016/04/07 17:06:25 by kwiessle         ###   ########.fr       */
+/*   Created: 2016/04/07 12:12:57 by kwiessle          #+#    #+#             */
+/*   Updated: 2016/04/07 12:35:51 by kwiessle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mlx.h>
-#include "../includes/fdf.h"
+#include "libft.h"
 
-int main(int ac, char **av)
+void	ft_swap(double *a, double *b)
 {
-	t_mlx	env;
+	double	tmp;
 
-	env.mlx = mlx_init();
-	env.win = mlx_new_window(env.mlx, 200, 200, "zdp");
-
-	mlx_loop(env.mlx);
-	return(0);
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
 }
