@@ -12,7 +12,7 @@
 
 NAME = fdf
 
-SRCS = srcs/main.c srcs/read_file.c
+SRCS = srcs/main.c srcs/parrallel.c srcs/t_node_handling.c srcs/t_iso_handling.c srcs/init_mlx.c srcs/get_map.c
 
 OBJS = $(SRCS:.c=.o)
 INCLUDES =-I libft -I includes -I mlx

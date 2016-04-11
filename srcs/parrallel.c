@@ -1,33 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   parrallel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kwiessle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/04/11 15:33:14 by kwiessle          #+#    #+#             */
-/*   Updated: 2016/04/11 16:42:12 by kwiessle         ###   ########.fr       */
+/*   Created: 2016/04/11 14:54:23 by kwiessle          #+#    #+#             */
+/*   Updated: 2016/04/11 16:43:01 by kwiessle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-int		main(int ac, char **av)
+t_iso	*parallel(t_node *cc)
 {
-	t_iso	*cc;
-	t_iso	*tmp;
-	t_mlx	*new;
+	t_node		*tmp;
+	t_iso		*new;
 
-	new = init_mlx();
-	cc = parallel(get_map(av[ac - 1]));
 	tmp = cc;
-	mlx_pixel_put(new->mlx, new->win, tmp->X, tmp->Y, 0xFF00FF);
-	mlx_pixel_put(new->mlx, new->win, tmp->next->X, tmp->next->Y, 0x00FF00);
-	while (tmp->next)
+	new = NULL;
+	while (cc)
 	{
-		mlx_pixel_put(new->mlx, new->win, tmp->X, tmp->Y, 0x00FF00);
-		tmp = tmp->next;
+		new = insert_node_iso(new, cc);
+		cc = cc->next;
 	}
-	mlx_loop(new->mlx);
-	return (0);
+	return (new);
 }
