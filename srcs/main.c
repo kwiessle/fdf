@@ -5,29 +5,60 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kwiessle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/04/11 15:33:14 by kwiessle          #+#    #+#             */
-/*   Updated: 2016/04/11 16:42:12 by kwiessle         ###   ########.fr       */
+/*   Created: 2016/05/02 13:59:27 by kwiessle          #+#    #+#             */
+/*   Updated: 2016/05/02 13:59:30 by kwiessle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/fdf.h"
+#include "fdf.h"
+
+int		fdf(t_env *env)
+{
+	t_node	*tmp;
+	char	*str;
+
+	str = ft_itoa(env->param->zoom);
+	tmp = env->map;
+	while (tmp)
+	{
+		draw_line(env, tmp);
+		tmp = tmp->next;
+	}
+	mlx_put_image_to_window(env->mlx, env->win, env->img->img, 0, 0);
+	mlx_string_put(env->mlx, env->win, 695, 791, 0xAEECFE, "Current zoom x");
+	mlx_string_put(env->mlx, env->win, 839, 791, 0xFFFFFF, str);
+	free(str);
+	str = ft_itoa(env->param->xdefault);
+	mlx_string_put(env->mlx, env->win, 170, 791, 0xAEECFE, "position.x =  ");
+	mlx_string_put(env->mlx, env->win, 300, 791, 0xFFFFFF, str);
+	free(str);
+	str = ft_itoa(env->param->ydefault);
+	mlx_string_put(env->mlx, env->win, 170, 811, 0xAEECFE, "position.y =  ");
+	mlx_string_put(env->mlx, env->win, 300, 811, 0xFFFFFF, str);
+	free(str);
+	str = (env->proj) ? "Current proj : par" : "Current proj : iso";
+	mlx_string_put(env->mlx, env->win, 695, 811, 0xAEECFE, str);
+	return (0);
+}
 
 int		main(int ac, char **av)
 {
-	t_iso	*cc;
-	t_iso	*tmp;
-	t_mlx	*new;
+	int		fd;
+	t_env	*env;
 
-	new = init_mlx();
-	cc = parallel(get_map(av[ac - 1]));
-	tmp = cc;
-	mlx_pixel_put(new->mlx, new->win, tmp->X, tmp->Y, 0xFF00FF);
-	mlx_pixel_put(new->mlx, new->win, tmp->next->X, tmp->next->Y, 0x00FF00);
-	while (tmp->next)
+	if (ac != 2)
 	{
-		mlx_pixel_put(new->mlx, new->win, tmp->X, tmp->Y, 0x00FF00);
-		tmp = tmp->next;
+		ft_putstr("Usage: ./fdf <filename>\n");
+		return (0);
 	}
-	mlx_loop(new->mlx);
+	if (!(ft_strstr(av[1], ".fdf")))
+		ft_error("\033[31;1mFile isn't a fdf map.\033[0m");
+	if ((fd = open(av[1], O_RDONLY)) < 0)
+		ft_error("\033[31;1mError when openning file.\033[0m");
+	env = init_env(fd);
+	fdf(env);
+	mlx_hook(env->win, 2, 3, key_funct, env);
+	mlx_mouse_hook(env->win, mouse_funct, env);
+	mlx_loop(env->mlx);
 	return (0);
 }

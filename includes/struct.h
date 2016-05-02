@@ -5,39 +5,65 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kwiessle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/04/11 16:39:29 by kwiessle          #+#    #+#             */
-/*   Updated: 2016/04/11 16:39:58 by kwiessle         ###   ########.fr       */
+/*   Created: 2016/05/02 15:00:46 by kwiessle          #+#    #+#             */
+/*   Updated: 2016/05/02 15:00:55 by kwiessle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_H
 # define STRUCT_H
 
+typedef struct		s_affine
+{
+	int				x;
+	int				y;
+	float			coef;
+	float			cst;
+}					t_affine;
+
+typedef struct		s_coord
+{
+	int				x;
+	int				y;
+	int				z;
+}					t_coord;
+
 typedef struct		s_node
 {
 	int				x;
 	int				y;
 	int				z;
+	int				color;
 	struct s_node	*next;
 }					t_node;
 
-typedef struct		s_iso
+typedef struct		s_param
 {
-	double			X;
-	double			Y;
-	struct s_iso	*next;
-}					t_iso;
+	int				x_max;
+	int				y_max;
+	int				zoom;
+	int				xdefault;
+	int				ydefault;
+	double			high;
+}					t_param;
 
-typedef struct		s_mlx
+typedef struct		s_img
+{
+	void			*img;
+	char			*data;
+	int				bpp;
+	int				sizeline;
+	int				endian;
+}					t_img;
+
+typedef struct		s_env
 {
 	void			*mlx;
 	void			*win;
-}					t_mlx;
-
-typedef struct		s_map
-{
-	int				height;
-	int				length;
-}					t_map;
+	t_node			*map;
+	t_img			*img;
+	t_param			*param;
+	int				proj;
+}					t_env;
 
 #endif

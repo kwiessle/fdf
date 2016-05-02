@@ -5,41 +5,59 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kwiessle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/03/24 13:01:26 by kwiessle          #+#    #+#             */
-/*   Updated: 2016/04/11 17:39:08 by kwiessle         ###   ########.fr       */
+/*   Created: 2016/05/02 15:00:20 by kwiessle          #+#    #+#             */
+/*   Updated: 2016/05/02 15:00:25 by kwiessle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-#include <mlx.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/uio.h>
-#include <fcntl.h>
-//#include <sys/type.h>
-#include <math.h>
-#include <stdio.h>
-#include "../libft/libft.h"
-#include "struct.h"
-#define CTE1 0.5
-#define CTE2 0.75
+# include "libft.h"
+# include "struct.h"
+# include "define.h"
+# include <mlx.h>
+# include <math.h>
+# include <stdio.h>
 
-#define X_SIZE 1800
-#define Y_SIZE 1440
+/*
+** DRAW FUNCTIONS
+*/
 
-t_node			*get_map(char *file);
+void		check_affine(t_env *env, t_node *start, t_node *end);
+void		draw_line(t_env *env, t_node *start);
+void		draw_vertical(t_env *env, t_node *start, t_node *end);
+void		mlx_put_pixel_to_image(t_env *env, t_affine *pixel, int color);
+t_img		*init_img(t_env *env);
+int			fdf(t_env *env);
+
+/*
+** DATA FUNCTIONS
+*/
+t_node		*get_map(int fd, t_param **param);
 t_node		*init_node(void);
-t_node		*new_node(int x, int y, int z);
-t_node		*insert_node(t_node *list, int x, int y, int z);
-t_iso		*init_node_iso(void);
-t_iso		*new_node_iso(t_node *list);
-t_iso		*insert_node_iso(t_iso *list, t_node *cc);
-t_iso		*parallel(t_node *cc);
-void		draw_lines(t_mlx *new, t_iso *start, t_iso *end);
-t_mlx		*init_mlx(void);
-char		*get_plan(char *line);
-t_map		plan_size(char *map);
+t_node		*new_node(t_coord coord, int colo);
+t_node		*insert_node(t_node *list, t_node *elem);
+t_env		*new_env(void);
+t_env		*init_env(int fd);
+t_param		*init_param(int x, int y, int z, double a);
+t_param		*new_param(t_param *param, t_param hook);
+t_node		*searchinlist(t_node *proj, t_param *param);
+
+/*
+** KEY_HOOK FUNCTION
+*/
+
+int			key_funct(int keycode, t_env *env);
+int			mouse_funct(int keycode, int x, int y, t_env *env);
+int			menu(t_env *env);
+void		body(t_env *env);
+void		left_wing(t_env *env);
+void		right_wing(t_env *env);
+void		high(t_env *env, int keycode, t_param hook);
+void		zoom(t_env *env, int keycode, t_param hook);
+void		moove(t_env *env, int keycode, t_param hook);
+void		projection(t_env *env, int keycode);
+void		origin(t_env *env, int keycode, t_param hook);
 
 #endif

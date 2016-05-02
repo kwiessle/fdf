@@ -5,66 +5,73 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kwiessle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/04/11 12:43:40 by kwiessle          #+#    #+#             */
-/*   Updated: 2016/04/11 17:36:46 by kwiessle         ###   ########.fr       */
+/*   Created: 2016/05/02 13:57:27 by kwiessle          #+#    #+#             */
+/*   Updated: 2016/05/02 14:51:26 by kwiessle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/fdf.h"
+#include "fdf.h"
 
-static int		is_valid(char *line)
+static int		get_color(char *map)
 {
 	int		i;
 
 	i = 0;
-	while (line[i])
+	while (map[i])
 	{
-		if (!(ft_isdigit(line[i])))
-		{
-			if (line[i] != '\n' && line[i] != '-' && line[i] != ' ')
-				return (1);
-		}
+		if (map[i] == 'x')
+			return (ft_atoi_base(&map[i + 1], 16));
 		i++;
 	}
-	return (0);
+	return (D_COLOR);
 }
 
-static t_node	*convert_map(t_node *list, char *line)
+static t_node	*convert_map(t_node *list, char *line, t_param *param)
 {
-	int				y;
-	char			**map;
-	static int		x;
+	int			x;
+	char		**map;
+	static int	y;
+	t_node		*elem;
 
-	y = 0;
-	map = ft_strsplit(line,' ');
-	while (map[y])
+	x = 0;
+	map = ft_strsplit(line, ' ');
+	while (map[x])
 	{
-		list = insert_node(list, x * 8, y * 8, ft_atoi(map[y]) * 8);
-		y++;
+		elem = init_node();
+		elem->x = x;
+		elem->y = y;
+		elem->z = ft_atoi(map[x]);
+		elem->color = get_color(map[x]);
+		list = insert_node(list, elem);
+		x++;
 	}
-	x++;
+	y++;
+	param->x_max = x - 1;
+	param->y_max = y - 1;
+	free(map);
 	return (list);
 }
 
-
-t_node		*get_map(char *file)
+t_node			*get_map(int fd, t_param **param)
 {
-	int			fd;
 	char		*line;
 	t_node		*new;
+	static int	x;
 
 	new = NULL;
-	if ((fd = open(file, O_RDONLY)))
+	*param = init_param(5, X_SIZE / 2, Y_SIZE / 2, 1);
+	if (get_next_line(fd, &line))
 	{
-		while (get_next_line(fd, &line))
-		{
-			if (is_valid(line) == 1)
-				ft_putstr("NTM : Map invalid");
-			new = convert_map(new, line);
-			free(line);
-		}
+		x = ft_tablen(ft_strsplit(line, ' '));
+		new = convert_map(new, line, *param);
 	}
 	else
-		ft_putstr("NTM2 : Unable to open the map");
+		ft_error("\033[31;1mError when reading the file.\033[0m");
+	while (get_next_line(fd, &line))
+	{
+		if (ft_tablen(ft_strsplit(line, ' ')) != x)
+			ft_error("\033[31;1mMap isn't a square.\033[0m");
+		new = convert_map(new, line, *param);
+	}
 	return (new);
 }
